@@ -6,6 +6,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 /*
 FOOL SCREEN STYLE
 */
@@ -24,13 +25,12 @@ main {
 .btn-primary {
     background-color: #f0c040;
     color: #000000;
-
+    border: #050101;
 }
 
 .rating span {
-color: #ffc107;
+    color: #ffc107;
 }
-
 
 
 /*
@@ -55,4 +55,8 @@ PRODUCT
 
 .product-info {
     padding: 1rem;
+}
+
+.img-large {
+    max-width: 100%;
 }
