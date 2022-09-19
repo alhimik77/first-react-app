@@ -1,4 +1,5 @@
-import {useParams} from "react-router-dom";
+
+import {useParams, useNavigate} from "react-router-dom";
 import {useEffect, useContext, useReducer} from "react";
 import axios from "axios";
 import {Row, Col, ListGroup, Card, Badge, Button} from "react-bootstrap";
@@ -24,6 +25,7 @@ const reducer = (state, action) => {
 };
 
 function ProductScreen() {
+    const navigate = useNavigate();
     const params = useParams();
     const {slug} = params;
 
@@ -47,22 +49,23 @@ function ProductScreen() {
     }, [slug]);
 
     const {state, dispatch: ctxDispatch} = useContext(Store);
-const { cart } = state;
-const addToCartHandler = async () => {
-    const existItem = cart.cartItems.find((x) => x._id === product._id);
-const quantity = existItem ? existItem.quantity + 1 : 1;
-const { data } = await axios.get(`/api/products/${product._id}`);
-   if (data.countInStock < quantity) {
-        window.alert('Sorry. Product is out of stock');
-        return;
+    const {cart} = state;
+    const addToCartHandler = async () => {
+        const existItem = cart.cartItems.find((x) => x._id === product._id);
+        const quantity = existItem ? existItem.quantity + 1 : 1;
+        const {data} = await axios.get(`/api/products/${product._id}`);
+        if (data.countInStock < quantity) {
+            window.alert('Sorry. Product is out of stock');
+            return;
+        }
 
-   }
+        ctxDispatch({
+            type: 'CART_ADD_ITEM',
+            payload: {...product, quantity},
+        });
+        navigate('/cart');
+    }
 
-    ctxDispatch({
-        type: 'CART_ADD_ITEM',
-        payload: {...product, quantity},
-    });
-}
     return loading ? (
         <LoadingBox/>
     ) : error ? (
@@ -93,7 +96,7 @@ const { data } = await axios.get(`/api/products/${product._id}`);
                         <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
                         <ListGroup.Item>
                             Description:
-                            {" " +  product.description }
+                            {" " + product.description}
                         </ListGroup.Item>
                     </ListGroup>
                 </Col>
@@ -130,7 +133,6 @@ const { data } = await axios.get(`/api/products/${product._id}`);
                                         </div>
                                     </ListGroup.Item>
                                 )}
-
                             </ListGroup>
                         </Card.Body>
                     </Card>
