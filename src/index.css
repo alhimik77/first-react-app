@@ -22,10 +22,13 @@ main {
     flex: 1;
 }
 
+
+
 .btn-primary {
     background-color: #f0c040;
     color: #000000;
-    border: #050101;
+    border: #2262fa;
+    font-weight: normal;
 }
 
 .rating span {
@@ -67,5 +70,15 @@ PRODUCT
 
 .small-container {
     max-width: 600px;
+    margin-top: 7rem;
 }
 
+.checkout-steps > div {
+  border-bottom: 0.2rem solid #a0a0a0;
+    color: #a0a0a0;
+}
+
+.checkout-steps > div.active {
+ border-bottom: 0.2rem solid #f08000;
+    color: #f08000;
+}
