@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import ShippingAddressScreen from "./screen/ShippingAdressScreen";
 import SignupScreen from "./screen/SignupScreen";
 import PaymentMethodScreen from "./screen/PaymentMethodScreen";
+import PlaceOrderScreen from "./screen/PlaceOrderScreen";
 
 function App() {
     const { state, dispatch: ctxDispatch} = useContext(Store);
@@ -81,6 +82,7 @@ function App() {
                             <Route path="/cart" element={<CartScreen/>}/>
                             <Route path="/signin" element={<SigninScreen/>}/>
                             <Route path="/signup" element={<SignupScreen/>}/>
+                            <Route path="/placeorder" element={<PlaceOrderScreen/>}/>
                             <Route path="/shipping" element={<ShippingAddressScreen/>}/>
                             <Route path="/payment" element={<PaymentMethodScreen/>}/>
 
