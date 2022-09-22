@@ -1,14 +1,44 @@
-import React, {useContext, useEffect} from "react";
+import React, {useContext, useEffect, useReducer} from "react";
 import {Helmet} from "react-helmet-async";
 import {Button, Card, Col, ListGroup, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
 import {Store} from "../Store";
 import CheckOutSteps from "../components/CheckOutSteps";
+import {getError} from "../utils";
+import {toast} from "react-toastify";
+import Axios from "axios";
+import LoadingBox from "../components/LoadingBox";
 
+
+const reducer = (state, action) => {
+    switch (action.type) {
+        case 'CREATE REQUEST':
+            return {
+                ...state,
+                loading: true,
+            };
+        case 'CREATE SUCCESS':
+            return {
+                ...state,
+                loading: false,
+            };
+        case 'CREATE FAIL':
+            return {
+                ...state,
+                loading: false,
+            };
+        default:
+            return state;
+    }
+};
 
 export default function PlaceOrderScreen() {
 
     const navigate = useNavigate();
+
+    const [{loading}, dispatch] = useReducer(reducer, {
+        loading: false,
+    });
 
     const {state, dispatch: ctxDispatch} = useContext(Store);
     const {cart, userInfo} = state;
@@ -20,15 +50,42 @@ export default function PlaceOrderScreen() {
     cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
 
-   const placeOrderHandler = async () => {
+    const placeOrderHandler = async () => {
+        try {
+            dispatch({type: 'CREATE REQUEST'});
+            const {data} = await Axios.post('/api/orders',
+                {
+                    orderItems: cart.cartItems,
+                    shippingAddress: cart.shippingAddress,
+                    paymentMethod: cart.paymentMethod,
+                    itemsPrice: cart.itemsPrice,
+                    shippingPrice: cart.shippingPrice,
+                    taxPrice: cart.taxPrice,
+                    totalPrice: cart.totalPrice,
+                },
+                {
+                    headers: {
+                        authorization: `Bearer ${userInfo.token},`
+                    }
 
-   };
+                }
+            );
+            ctxDispatch({type: 'CART_CLEAR'});
+            dispatch({type: 'CREATE SUCCESS'});
+            localStorage.removeItem('cartItems');
+            navigate(`/order/${data.order._id}`);
+        } catch (err) {
+            dispatch({type: 'CREATE FAIL'});
+            toast.error(getError(err));
+        }
 
-   useEffect(() => {
-       if (!cart.paymentMethod) {
-           navigate('/payment');
-       }
-   },[ cart, navigate]);
+    };
+
+    useEffect(() => {
+        if (!cart.paymentMethod) {
+            navigate('/payment');
+        }
+    }, [cart, navigate]);
 
     return (
         <div>
@@ -115,7 +172,7 @@ export default function PlaceOrderScreen() {
                                 <ListGroup.Item>
                                     <Row>
                                         <Col>
-                                           <strong>Order Total</strong>
+                                            <strong>Order Total</strong>
                                         </Col>
                                         <Col>${cart.totalPrice.toFixed(2)}</Col>
                                     </Row>
@@ -130,6 +187,7 @@ export default function PlaceOrderScreen() {
                                             Place Order
                                         </Button>
                                     </div>
+                                    {loading && <LoadingBox></LoadingBox>}
                                 </ListGroup.Item>
 
                             </ListGroup>
