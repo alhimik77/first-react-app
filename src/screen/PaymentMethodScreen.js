@@ -1,9 +1,9 @@
 import React, {useContext, useEffect, useState} from "react";
-import CheckOutSteps from "../components/CheckOutSteps";
 import {Helmet} from "react-helmet-async";
-import {Button, Form} from "react-bootstrap";
-import {Store} from "../Store";
 import {useNavigate} from "react-router-dom";
+import {Button, Form} from "react-bootstrap";
+import CheckOutSteps from "../components/CheckOutSteps";
+import {Store} from "../Store";
 
 export default function PaymentMethodScreen() {
 
@@ -23,7 +23,7 @@ export default function PaymentMethodScreen() {
 
     const submitHandler = (e) => {
         e.preventDefault();
-      ctxDispatch({type: 'CART_SAVE_PAYMENT_METHOD', payload: paymentMethodName});
+      ctxDispatch({type: 'SAVE_PAYMENT_METHOD', payload: paymentMethodName});
     localStorage.setItem('paymentMethod', paymentMethodName);
     navigate('/placeorder');
     };
@@ -64,7 +64,6 @@ export default function PaymentMethodScreen() {
                             </Button>
                         </div>
                     </div>
-
                 </Form>
             </div>
         </div>

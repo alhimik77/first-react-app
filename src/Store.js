@@ -21,14 +21,14 @@ const initialState = {
     },
 };
 
-
 function reducer(state, action) {
     switch (action.type) {
         case 'CART_ADD_ITEM':
             // add to cart
             const newItem = action.payload;
             const existItem = state.cart.cartItems.find(
-                (item) => item._id === newItem._id);
+                (item) => item._id === newItem._id
+            );
             const cartItems = existItem
                 ? state.cart.cartItems.map((item) =>
                     item._id === existItem._id ? newItem : item
@@ -45,10 +45,11 @@ function reducer(state, action) {
             return {...state, cart: {...state.cart, cartItems}};
         }
         case 'CART_CLEAR':
-            return { ...state, cart: {...state.cart, cartItems: []}} ;
+            return { ...state, cart: {...state.cart, cartItems: [] } };
 
         case 'USER_SIGNIN':
             return {...state, userInfo: action.payload};
+
         case 'USER_SIGNOUT':
             return {
                 ...state,

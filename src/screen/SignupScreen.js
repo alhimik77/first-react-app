@@ -1,7 +1,7 @@
+import Axios from "axios";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Button, Container, Form} from "react-bootstrap";
 import {Helmet} from "react-helmet-async";
-import {Link, useLocation, useNavigate} from "react-router-dom";
-import Axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import {Store} from "../Store";
 import {toast} from "react-toastify";
@@ -9,9 +9,7 @@ import {getError} from "../utils";
 
 
 export default function SignupScreen() {
-
     const navigate = useNavigate();
-
     const {search} = useLocation();
     const redirectInUrl = new URLSearchParams(search).get('redirect');
     const redirect = redirectInUrl ? redirectInUrl : '/';
@@ -22,13 +20,12 @@ export default function SignupScreen() {
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const {state, dispatch: ctxDispatch} = useContext(Store);
-
     const {userInfo} = state;
 
     const submitHandler = async (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            toast.error('Password and Confirm Password are not match');
+            toast.error('Password do not match');
             return;
         }
         try {
@@ -92,7 +89,6 @@ export default function SignupScreen() {
                     Already have an account?{' '}
                     <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
                 </div>
-
             </Form>
         </Container>
     )

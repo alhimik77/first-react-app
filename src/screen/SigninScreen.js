@@ -1,7 +1,7 @@
-import {Button, Container, Form} from "react-bootstrap";
+import {Button, Container, Form } from "react-bootstrap";
 import {Helmet} from "react-helmet-async";
 import {Link, useLocation, useNavigate} from "react-router-dom";
-import axios from "axios";
+import Axios from "axios";
 import {useContext, useEffect, useState} from "react";
 import {Store} from "../Store";
 import {toast} from "react-toastify";
@@ -26,7 +26,7 @@ export default function SigninScreen() {
     const submitHandler = async (e) => {
         e.preventDefault();
         try {
-            const {data} = await axios.post('/api/users/signin', {
+            const {data} = await Axios.post('/api/users/signin', {
                 email,
                 password,
             });
@@ -53,12 +53,14 @@ export default function SigninScreen() {
             <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="email">
                     <Form.Label>Email Address</Form.Label>
+                 {/*<FormControl type="email" placeholder="Enter email" />*/}
                     <Form.Control type="email" placeholder="Enter email" required
                                   onChange={(e) => setEmail(e.target.value)}/>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="password">
                     <Form.Label>Password</Form.Label>
+                 {/*<FormControl type="password" placeholder="Enter password" required />*/}
                     <Form.Control type="password" placeholder="Enter password" required
                                   onChange={(e) => setPassword(e.target.value)}/>
                 </Form.Group>
@@ -71,7 +73,6 @@ export default function SigninScreen() {
                     New customer?{' '}
                     <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
                 </div>
-
             </Form>
         </Container>
     )

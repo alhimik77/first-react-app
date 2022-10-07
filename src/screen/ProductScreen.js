@@ -119,7 +119,8 @@ function ProductScreen() {
                                                     <Badge bg="success">In Stock</Badge>
                                                 ) : (
                                                     <Badge bg="danger">Out of Stock</Badge>
-                                                )}
+                                                )
+                                            }
                                         </Col>
                                     </Row>
                                 </ListGroup.Item>

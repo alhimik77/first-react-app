@@ -1,13 +1,14 @@
+import Axios from "axios";
 import React, {useContext, useEffect, useReducer} from "react";
 import {Helmet} from "react-helmet-async";
-import {Button, Card, Col, ListGroup, Row} from "react-bootstrap";
 import {Link, useNavigate} from "react-router-dom";
+import {Button, Card, Col, ListGroup, Row} from "react-bootstrap";
+import {toast} from "react-toastify";
+import {getError} from "../utils";
 import {Store} from "../Store";
 import CheckOutSteps from "../components/CheckOutSteps";
-import {getError} from "../utils";
-import {toast} from "react-toastify";
-import Axios from "axios";
 import LoadingBox from "../components/LoadingBox";
+
 
 
 const reducer = (state, action) => {
@@ -36,7 +37,7 @@ export default function PlaceOrderScreen() {
 
     const navigate = useNavigate();
 
-    const [{loading}, dispatch] = useReducer(reducer, {
+    const [ { loading }, dispatch ] = useReducer(reducer, {
         loading: false,
     });
 
@@ -52,34 +53,35 @@ export default function PlaceOrderScreen() {
 
     const placeOrderHandler = async () => {
         try {
-            dispatch({type: 'CREATE REQUEST'});
-            const {data} = await Axios.post('/api/orders',
-                {
-                    orderItems: cart.cartItems,
-                    shippingAddress: cart.shippingAddress,
-                    paymentMethod: cart.paymentMethod,
-                    itemsPrice: cart.itemsPrice,
-                    shippingPrice: cart.shippingPrice,
-                    taxPrice: cart.taxPrice,
-                    totalPrice: cart.totalPrice,
-                },
-                {
-                    headers: {
-                        authorization: `Bearer ${userInfo.token},`
-                    }
+                    dispatch({ type: 'CREATE_REQUEST' });
 
+                    const { data } = await Axios.post('/api/orders',
+
+                        {
+                            orderItems: cart.cartItems,
+                            shippingAddress: cart.shippingAddress,
+                            paymentMethod: cart.paymentMethod,
+                            itemsPrice: cart.itemsPrice,
+                            shippingPrice: cart.shippingPrice,
+                            taxPrice: cart.taxPrice,
+                            totalPrice: cart.totalPrice,
+                        },
+                        {
+                            headers: {
+                              authorization: `Bearer ${userInfo.token}`,
+                            },
+                        }
+                    );
+                    ctxDispatch({type: 'CART_CLEAR'});
+                    dispatch({type: 'CREATE_SUCCESS'});
+                    localStorage.removeItem('cartItems');
+                    navigate(`/order/${data.order._id}`);
+                } catch (err) {
+                    dispatch({type: 'CREATE_FAIL'});
+                    toast.error(getError(err));
                 }
-            );
-            ctxDispatch({type: 'CART_CLEAR'});
-            dispatch({type: 'CREATE SUCCESS'});
-            localStorage.removeItem('cartItems');
-            navigate(`/order/${data.order._id}`);
-        } catch (err) {
-            dispatch({type: 'CREATE FAIL'});
-            toast.error(getError(err));
-        }
 
-    };
+            };
 
     useEffect(() => {
         if (!cart.paymentMethod) {
@@ -187,15 +189,13 @@ export default function PlaceOrderScreen() {
                                             Place Order
                                         </Button>
                                     </div>
-                                    {loading && <LoadingBox></LoadingBox>}
+                                    { loading && <LoadingBox></LoadingBox> }
                                 </ListGroup.Item>
 
                             </ListGroup>
                         </Card.Body>
                     </Card>
-
                 </Col>
-
             </Row>
         </div>
     );

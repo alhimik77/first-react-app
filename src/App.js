@@ -13,8 +13,10 @@ import ShippingAddressScreen from "./screen/ShippingAdressScreen";
 import SignupScreen from "./screen/SignupScreen";
 import PaymentMethodScreen from "./screen/PaymentMethodScreen";
 import PlaceOrderScreen from "./screen/PlaceOrderScreen";
+import OrderScreen from "./screen/OrderScreen";
 
 function App() {
+
     const { state, dispatch: ctxDispatch} = useContext(Store);
     const {cart, userInfo} = state;
 
@@ -28,9 +30,7 @@ function App() {
     return (
         <BrowserRouter>
             <div className="d-flex flex-column site-container">
-
                 <ToastContainer position="bottom-center" limit={1} />
-
                 <header>
                     <Navbar bg="dark" variant="dark">
                         <Container>
@@ -83,6 +83,7 @@ function App() {
                             <Route path="/signin" element={<SigninScreen/>}/>
                             <Route path="/signup" element={<SignupScreen/>}/>
                             <Route path="/placeorder" element={<PlaceOrderScreen/>}/>
+                            <Route path="/order/:id" element={<OrderScreen/>}/>
                             <Route path="/shipping" element={<ShippingAddressScreen/>}/>
                             <Route path="/payment" element={<PaymentMethodScreen/>}/>
 
