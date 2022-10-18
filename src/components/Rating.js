@@ -1,26 +1,28 @@
 
-function Rating(props) {
 
-    const {rating, numReviews} = props;
+
+function Rating(props) {
+    const {rating, numReviews, caption} = props;
+
     return (
 
         <div className="rating">
             <span>
                 <i
-                className={
-                    rating >= 1
-                        ? "bi bi-star-fill"
-                        : rating >= 0.5
-                            ? "fa fa-star-half-alt"
-                            :  "bi bi-star"
-                }></i>
+                    className={
+                        rating >= 1
+                            ? "bi bi-star-fill"
+                            : rating >= 1
+                                ? "fa fa-star-half"
+                                : "bi bi-star-fill"
+                    }></i>
             </span>
 
             <span>  <i
                 className={
                     rating >= 2
-                        ?  "bi bi-star-fill"
-                        : rating >= 1.5
+                        ? "bi bi-star-fill"
+                        : rating >= 2
                             ? "fa fa-star-half"
                             : "bi bi-star-fill"
                 }></i>
@@ -44,7 +46,7 @@ function Rating(props) {
                         ? "bi bi-star-fill"
                         : rating >= 3.5
                             ? "fa fa-star-half"
-                            : "bi bi-star-fill"
+                            : "bi bi-star"
                 }></i>
             </span>
 
@@ -53,14 +55,17 @@ function Rating(props) {
                     rating >= 5
                         ? "bi bi-star"
                         : rating >= 4.5
-                            ? "bi bi-star-half"
+                            ? "bi bi-star-half-alt"
                             : "bi bi-star"
                 }></i>
             </span>
-            <span>
-                { numReviews } reviews
-            </span>
+            {caption ? (
+                <span>{caption}</span>
+            ) : (
+                <span>{ ' ' + numReviews + ' reviews'}</span>
+            )}
         </div>
     )
 }
+
 export default Rating;

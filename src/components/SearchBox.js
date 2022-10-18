@@ -9,7 +9,7 @@ export default function SearchBox() {
     const [query, setQuery] = useState('');
     const submitHandler = (e) => {
         e.preventDefault();
-        navigate(query ? `/search/name/${query}` : '/search');
+        navigate(query ? `/search/?query=${query}` : '/search');
     };
     return (
         <Form className="d-flex me-auto" onSubmit={submitHandler}>
@@ -18,7 +18,7 @@ export default function SearchBox() {
                 <FormControl
                     type="text"
                     name="q"
-                    id={'q'}
+                    id="q"
                     onChange={(e) => setQuery(e.target.value)}
                 placeholder={'Search Products'}
                     aria-label={'Search Products'}
