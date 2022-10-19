@@ -25,6 +25,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardScreen from "./screen/DashboardScreen";
 import AdminRoute from "./components/AdminRoute";
 import ProductListScreen from "./screen/ProductListScreen";
+import ProductEditScreen from "./screen/ProductEditScreen";
 
 function App() {
 
@@ -208,6 +209,14 @@ function App() {
                                 element={
                                     <AdminRoute>
                                         <ProductListScreen />
+                                    </AdminRoute>
+                                }/>
+
+                            <Route
+                                path="/admin/product/:id"
+                                element={
+                                    <AdminRoute>
+                                        <ProductEditScreen />
                                     </AdminRoute>
                                 }/>
 
