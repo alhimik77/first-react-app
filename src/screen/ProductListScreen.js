@@ -1,9 +1,14 @@
 import React, {useContext, useEffect, useReducer} from "react";
 import axios from "axios";
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 import {Store} from "../Store";
 import LoadingBox from "../components/LoadingBox";
 import MessageBox from "../components/MessageBox";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
+import {toast} from "react-toastify";
+import {getError} from "../utils";
 
 
 const reducer = (state, action) => {
@@ -23,17 +28,31 @@ const reducer = (state, action) => {
                 ...state, loading: false,
                 error: action.payload
             };
+        case 'CREATE_REQUEST':
+            return {...state, loadingCreate: true};
+
+        case 'CREATE_SUCCESS':
+            return {
+                ...state,
+                loadingCreate: false,
+            }
+        case 'CREATE_FAIL':
+            return {
+                ...state,
+                loadingCreate: false,
+            }
         default:
             return state;
     }
 }
 
 export default function ProductListScreen() {
-    const [{loading, error, products, pages}, dispatch] = useReducer(reducer, {
+    const [{loading, error, products, pages}, dispatch, loadingCreate] = useReducer(reducer, {
         loading: true,
         error: '',
     });
 
+    const navigate = useNavigate();
     const {search, pathname} = useLocation();
     const sp = new URLSearchParams(search);
     const page = sp.get('page') || 1;
@@ -53,9 +72,48 @@ export default function ProductListScreen() {
         };
         fetchData();
     }, [page, userInfo]);
+
+
+    const createHandler = async () => {
+        if (window.confirm('Are you sure?')) {
+            try {
+                dispatch({type: 'FETCH_REQUEST'});
+                const {data} = await axios.post(
+                    '/api/products',
+                    {},
+                    {
+                        headers: {Authorization: `Bearer ${userInfo.token}`},
+                    });
+                toast.success('Product Created Successfully');
+                dispatch({type: 'CREATE_SUCCESS'});
+                navigate(`/admin/product/${data.product._id}`);
+            } catch (err) {
+                toast.error(getError(err));
+                dispatch({
+                    type: 'FETCH_FAIL',
+                });
+            }
+        }
+    }
+
+
     return (
         <div>
-            <h1>Product List</h1>
+            <Row>
+                <Col>
+                    <h1>Product List</h1>
+                </Col>
+                <Col className={'text-end'}>
+                    <div>
+                        <Button type={'button'} onClick={createHandler}>
+                            Create Product
+                        </Button>
+                    </div>
+                </Col>
+            </Row>
+
+            {loadingCreate && <LoadingBox />}
+
             {loading ? (
                 <LoadingBox></LoadingBox>
             ) : error ? (
