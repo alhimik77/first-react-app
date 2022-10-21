@@ -26,6 +26,7 @@ import DashboardScreen from "./screen/DashboardScreen";
 import AdminRoute from "./components/AdminRoute";
 import ProductListScreen from "./screen/ProductListScreen";
 import ProductEditScreen from "./screen/ProductEditScreen";
+import OrderListScreen from "./screen/OrderListScreen";
 
 function App() {
 
@@ -125,7 +126,7 @@ function App() {
                                             <LinkContainer to="/admin/products">
                                                 <NavDropdown.Item>Products</NavDropdown.Item>
                                             </LinkContainer>
-                                            <LinkContainer to="/admin/order">
+                                            <LinkContainer to="/admin/orders">
                                                 <NavDropdown.Item>Orders</NavDropdown.Item>
                                             </LinkContainer>
                                             <LinkContainer to="/admin/users">
@@ -209,6 +210,14 @@ function App() {
                                 element={
                                     <AdminRoute>
                                         <ProductListScreen />
+                                    </AdminRoute>
+                                }/>
+
+                            <Route
+                                path="/admin/orders"
+                                element={
+                                    <AdminRoute>
+                                        <OrderListScreen />
                                     </AdminRoute>
                                 }/>
 
