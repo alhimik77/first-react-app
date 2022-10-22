@@ -9,6 +9,7 @@ import Axios from "axios";
 import {Helmet} from "react-helmet-async";
 import {Card, Col, ListGroup, Row} from "react-bootstrap";
 import {toast} from "react-toastify";
+import Button from "react-bootstrap/Button";
 
 
 function reducer(state, action) {
@@ -27,7 +28,29 @@ function reducer(state, action) {
             return {...state, loadingPay: false};
         case 'PAY_RESET':
             return {...state, loadingPay: false, successPay: false};
-
+        case 'DELIVER_REQUEST':
+            return {
+                ...state,
+                loadingDeliver: true,
+            };
+        case 'DELIVER_SUCCESS':
+            return {
+                ...state,
+                loadingDeliver: false,
+                successDeliver: true,
+            }
+        case 'DELIVER_FAIL':
+            return {
+                ...state,
+                loadingDeliver: false,
+                errorDeliver: action.payload,
+            }
+        case 'DELIVER_RESET':
+            return {
+                ...state,
+                loadingDeliver: false,
+                successDeliver: false,
+            };
         default:
             return state;
     }
@@ -43,7 +66,7 @@ export default function OrderScreen() {
 
     const navigate = useNavigate();
 
-    const [{ loading, error, order, successPay, loadingPay }, dispatch] = useReducer(reducer, {
+    const [{loading, error, order, successPay, loadingPay, loadingDeliver, successDeliver}, dispatch] = useReducer(reducer, {
         loading: true,
         order: {},
         error: '',
@@ -52,7 +75,7 @@ export default function OrderScreen() {
     });
 
 
-    const [{ isPending }, paypalDispatch ] = usePayPalScriptReducer();
+    const [{isPending}, paypalDispatch] = usePayPalScriptReducer();
 
 
     function createOrder(data, actions) {
@@ -110,10 +133,13 @@ export default function OrderScreen() {
         if (!userInfo) {
             navigate('/signin');
         }
-        if (!order._id ||successPay || (order._id && order._id !== orderId)) {
+        if (!order._id || successPay || successDeliver || (order._id && order._id !== orderId)) {
             fetchOrder();
             if (successPay) {
                 dispatch({type: 'PAY_RESET'});
+            }
+            if (successDeliver) {
+                dispatch({type: 'DELIVER_RESET'});
             }
         } else {
             const loadPaypalScript = async () => {
@@ -133,7 +159,24 @@ export default function OrderScreen() {
             }
             loadPaypalScript();
         }
-    }, [navigate, orderId, order, userInfo, paypalDispatch, successPay]);
+    }, [navigate, orderId, order, userInfo, paypalDispatch, successPay, successDeliver]);
+
+
+    async function deliverOrderHandler() {
+    try {
+            dispatch({type: 'DELIVER_REQUEST'});
+            const {data} = await Axios.put(`/api/orders/${order._id}/deliver`, {}, {
+                headers: {
+                    Authorization: `Bearer ${userInfo.token}`,
+                },
+            });
+            dispatch({type: 'DELIVER_SUCCESS', payload: data});
+            toast.success('Order delivered');
+        } catch (err) {
+        toast.error(getError(err));
+            dispatch({type: 'DELIVER_FAIL', payload: getError(err)});
+        }
+    }
 
     return loading ? (
         <LoadingBox></LoadingBox>
@@ -254,6 +297,19 @@ export default function OrderScreen() {
                                             </div>
                                         )}
                                         {loadingPay && <LoadingBox></LoadingBox>}
+                                    </ListGroup.Item>
+                                )}
+                                {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                    <ListGroup.Item>
+                                        {loadingDeliver && <LoadingBox></LoadingBox>}
+                                        <div className={'d-grid'}>
+                                            <Button
+                                                type="button"
+                                                onClick={deliverOrderHandler}
+                                            >
+                                                Deliver Order
+                                            </Button>
+                                        </div>
                                     </ListGroup.Item>
                                 )}
                             </ListGroup>
