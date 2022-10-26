@@ -29,11 +29,12 @@ import ProductEditScreen from "./screen/ProductEditScreen";
 import OrderListScreen from "./screen/OrderListScreen";
 import UserListScreen from "./screen/UserListScreen";
 import UserEditScreen from "./screen/UserEditScreen";
+import MapScreen from "./screen/MapScreen";
 
 function App() {
 
     const {state, dispatch: ctxDispatch} = useContext(Store);
-    const {cart, userInfo} = state;
+    const { /*{fullBox,}*/  cart, userInfo} = state;
 
     const signoutHandler = () => {
         ctxDispatch({type: 'USER_SIGNOUT'});
@@ -64,8 +65,16 @@ function App() {
             <div
                 className={
                     sidebarIsOpen
+
                         ? 'd-flex flex-column site-container active-cont'
                         : 'd-flex flex-column site-container'
+
+                        // ? fullBox
+                        //     ? 'site-container active-count d-flex flex-column full-box'
+                        //     : 'site-container active-count d-flex flex-column'
+                        // : fullBox
+                        //     ? 'site-container d-flex flex-column full-box'
+                        //     : 'site-container d-flex flex-column'
                 }
             >
                 <ToastContainer position="bottom-center" limit={1}/>
@@ -183,6 +192,12 @@ function App() {
                                 </ProtectedRoute>
                             }/>
 
+                            {/*<Route path="/map" element={*/}
+                            {/*    <ProtectedRoute>*/}
+                            {/*        <MapScreen />*/}
+                            {/*    </ProtectedRoute>*/}
+                            {/*}/>*/}
+
                             <Route path="/placeorder" element={<PlaceOrderScreen/>}/>
                             <Route path="/order/:id" element={
                                 <ProtectedRoute>
@@ -202,16 +217,16 @@ function App() {
                             <Route
                                 path="/admin/dashboard"
                                 element={
-                                <AdminRoute>
-                                    <DashboardScreen/>
-                                </AdminRoute>
-                            }/>
+                                    <AdminRoute>
+                                        <DashboardScreen/>
+                                    </AdminRoute>
+                                }/>
 
                             <Route
                                 path="/admin/users"
                                 element={
                                     <AdminRoute>
-                                        <UserListScreen />
+                                        <UserListScreen/>
                                     </AdminRoute>
                                 }
                             ></Route>
@@ -220,7 +235,7 @@ function App() {
                                 path="/admin/products"
                                 element={
                                     <AdminRoute>
-                                        <ProductListScreen />
+                                        <ProductListScreen/>
                                     </AdminRoute>
                                 }/>
 
@@ -228,7 +243,7 @@ function App() {
                                 path="/admin/orders"
                                 element={
                                     <AdminRoute>
-                                        <OrderListScreen />
+                                        <OrderListScreen/>
                                     </AdminRoute>
                                 }/>
 
@@ -236,7 +251,7 @@ function App() {
                                 path="/admin/product/:id"
                                 element={
                                     <AdminRoute>
-                                        <ProductEditScreen />
+                                        <ProductEditScreen/>
                                     </AdminRoute>
                                 }/>
 
@@ -244,7 +259,7 @@ function App() {
                                 path="/admin/user/:id"
                                 element={
                                     <AdminRoute>
-                                        <UserEditScreen />
+                                        <UserEditScreen/>
                                     </AdminRoute>
                                 }/>
 

@@ -145,26 +145,26 @@ export default function ProductEditScreen() {
 
 
     const uploadFileHandler = async (e) => {
-     const file = e.target.files[0];
-     const bodyFormData = new FormData();
-     bodyFormData.append('file', file);
-     try {
-       dispatch({type: 'UPLOAD_REQUEST'});
-         const {data} = await axios.post('/api/upload', bodyFormData, {
-              headers: {
-                  'Content-Type': 'multipart/form-data',
+        const file = e.target.files[0];
+        const bodyFormData = new FormData();
+        bodyFormData.append('file', file);
+        try {
+            dispatch({type: 'UPLOAD_REQUEST'});
+            const {data} = await axios.post('/api/upload', bodyFormData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
                     Authorization: `Bearer ${userInfo.token}`,
                 },
-         });
-         dispatch({type: 'UPLOAD_SUCCESS'});
+            });
+            dispatch({type: 'UPLOAD_SUCCESS'});
 
-         toast.success('Image uploaded successfully');
+            toast.success('Image uploaded successfully');
             setImage(data.secure_url);
-     }catch (err) {
-         toast.error(getError(err));
-         dispatch({type: 'UPLOAD_FAIL', payload: getError(err)});
+        } catch (err) {
+            toast.error(getError(err));
+            dispatch({type: 'UPLOAD_FAIL', payload: getError(err)});
 
-     }
+        }
 
     }
 

@@ -198,6 +198,17 @@ export default function OrderScreen() {
                                 <strong>Address:</strong> {order.shippingAddress.address},
                                 {order.shippingAddress.city}, {order.shippingAddress.postalCode},
                                 {order.shippingAddress.country}
+                                {/*&nbsp;*/}
+                                {/*{order.shippingAddress.location &&*/}
+                                {/*order.shippingAddress.location.lat && (*/}
+                                {/*    <a*/}
+                                {/*        target={'new'}*/}
+                                {/*        href={`https://www.google.com?q=${order.shippingAddress.location.lat},${order.shippingAddress.location.lng}`}*/}
+                                {/*        >*/}
+                                {/*        Show on map*/}
+                                {/*    </a>*/}
+                                {/*    )*/}
+                                {/*}*/}
                             </Card.Text>
                             {order.isDelivered ? (
                                 <MessageBox variant="success">
